@@ -4,6 +4,12 @@ import CommandContexts from "./commandContexts.js";
 import SlashCommandOption from "./slashCommandOption.js";
 
 export default class Command {
+	#name;
+	#description;
+	#isSlashCommand;
+	#isUserContextMenuCommand;
+	#isMessageContextMenuCommand;
+	#options;
 	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;
 	static #validateName = name => {
 		if (name === undefined || name === null) {
@@ -60,14 +66,14 @@ export default class Command {
 	};
 	constructor({name, description, contexts = new CommandContexts(), options = []} = {}) {
 		Command.#validateName(name);
-		this.name = name;
+		this.#name = name;
 		Command.#validateDescription(description, contexts);
-		this.description = description;
+		this.#description = description;
 		Command.#validateContext(contexts);
-		this.isSlashCommand = contexts.isSlashCommand();
-		this.isUserContextMenuCommand = contexts.isUserContextMenuCommand();
-		this.isMessageContextMenuCommand = contexts.isMessageContextMenuCommand();
+		this.#isSlashCommand = contexts.isSlashCommand();
+		this.#isUserContextMenuCommand = contexts.isUserContextMenuCommand();
+		this.#isMessageContextMenuCommand = contexts.isMessageContextMenuCommand();
 		Command.#validateOptions(options, contexts);
-		this.options = options;
+		this.#options = options;
 	};
 };
