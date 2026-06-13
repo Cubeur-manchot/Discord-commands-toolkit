@@ -10,6 +10,7 @@ export default class Command {
 	#isUserContextMenuCommand;
 	#isMessageContextMenuCommand;
 	#options;
+	#allowDirectMessages;
 	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;
 	static #validateName = name => {
 		if (name === undefined || name === null) {
@@ -64,7 +65,12 @@ export default class Command {
 			throw new TypeError("Command options must be instances of SlashCommandOption.");
 		}
 	};
-	constructor({name, description, contexts = new CommandContexts(), options = []} = {}) {
+	static #validateAllowDirectMessages = (allowDirectMessages) => {
+		if (typeof allowDirectMessages !== "boolean") {
+			throw new TypeError("Command allowDirectMessages must be a boolean.");
+		}
+	};
+	constructor({name, description, contexts = new CommandContexts(), options = [], allowDirectMessages = false} = {}) {
 		Command.#validateName(name);
 		this.#name = name;
 		Command.#validateDescription(description, contexts);
@@ -75,5 +81,7 @@ export default class Command {
 		this.#isMessageContextMenuCommand = contexts.isMessageContextMenuCommand();
 		Command.#validateOptions(options, contexts);
 		this.#options = options;
+		Command.#validateAllowDirectMessages(allowDirectMessages);
+		this.#allowDirectMessages = allowDirectMessages;
 	};
 };
