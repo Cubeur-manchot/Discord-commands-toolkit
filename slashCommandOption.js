@@ -144,4 +144,10 @@ const SlashCommandIntegerOption = class extends SlashCommandOption {
 	});
 };
 
-export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption, SlashCommandIntegerOption};
+const SlashCommandBooleanOption = class extends SlashCommandOption {
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addBooleanOption(optionBuilder =>
+		this._configureOptionBuilderCommonProperties(optionBuilder)
+	);
+};
+
+export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption, SlashCommandIntegerOption, SlashCommandBooleanOption};
