@@ -11,6 +11,7 @@ export default class Command {
 	#isMessageContextMenuCommand;
 	#options;
 	#allowDirectMessages;
+	#memberPermissions;
 	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;
 	static #validateName = name => {
 		if (name === undefined || name === null) {
@@ -46,7 +47,7 @@ export default class Command {
 			throw new RangeError("Command description for slash command must be between 1 and 100 characters.");
 		}
 	};
-	static #validateContext = (context) => {
+	static #validateContext = context => {
 		if (!(context instanceof CommandContexts)) {
 			throw new TypeError("Command contexts must be an instance of CommandContexts.");
 		}
@@ -65,12 +66,27 @@ export default class Command {
 			throw new TypeError("Command options must be instances of SlashCommandOption.");
 		}
 	};
-	static #validateAllowDirectMessages = (allowDirectMessages) => {
+	static #validateAllowDirectMessages = allowDirectMessages => {
 		if (typeof allowDirectMessages !== "boolean") {
 			throw new TypeError("Command allowDirectMessages must be a boolean.");
 		}
 	};
-	constructor({name, description, contexts = new CommandContexts(), options = [], allowDirectMessages = false} = {}) {
+	static #validateMemberPermissions = memberPermissions => {
+		if (memberPermissions === null) {
+			return;
+		}
+		if (typeof memberPermissions !== "bigint") {
+			throw new TypeError("Command memberPermissions must be a bigint (Discord.PermissionFlagsBits).");
+		}
+	};
+	constructor({
+		name,
+		description,
+		contexts = new CommandContexts(),
+		options = [],
+		allowDirectMessages = false,
+		memberPermissions = null
+	} = {}) {
 		Command.#validateName(name);
 		this.#name = name;
 		Command.#validateDescription(description, contexts);
@@ -83,5 +99,7 @@ export default class Command {
 		this.#options = options;
 		Command.#validateAllowDirectMessages(allowDirectMessages);
 		this.#allowDirectMessages = allowDirectMessages;
+		Command.#validateMemberPermissions(memberPermissions);
+		this.#memberPermissions = memberPermissions;
 	};
 };
