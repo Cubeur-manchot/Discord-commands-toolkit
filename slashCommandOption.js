@@ -1,10 +1,10 @@
 "use strict";
 
 const SlashCommandOption = class {
-	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;
 	#name;
 	#description;
 	#required;
+	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;
 	static #validateName = name => {
 		if (name === undefined || name === null) {
 			throw new TypeError("Option name is required.");
@@ -39,6 +39,9 @@ const SlashCommandOption = class {
 		}
 	};
 	constructor({name, description, required = false, choices} = {}) {
+		if (new.target === SlashCommandOption) {
+			throw new TypeError("SlashCommandOption is an abstract class and cannot be instantiated directly.");
+		}
 		SlashCommandOption.#validateName(name);
 		this.#name = name;
 		SlashCommandOption.#validateDescription(description);
