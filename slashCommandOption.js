@@ -86,7 +86,7 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 };
 
 const SlashCommandUserOption = class extends SlashCommandOption {
-	#validateNoChoices = choices => {
+	static #validateNoChoices = choices => {
 		if (choices !== undefined && choices !== null) {
             throw new TypeError("Option choices are not allowed for user options.");
 		}
