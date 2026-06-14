@@ -112,4 +112,36 @@ const SlashCommandUserOption = class extends SlashCommandOption {
 	);
 };
 
-export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption};
+const SlashCommandIntegerOption = class extends SlashCommandOption {
+	#minValue;
+	#maxValue;
+    static #validateBounds = (minValue, maxValue) => {
+		if (minValue !== null && !Number.isSafeInteger(minValue)) {
+			throw new TypeError("Option minValue must be an integer.");
+		}
+		if (maxValue !== null && !Number.isSafeInteger(maxValue)) {
+			throw new TypeError("Option maxValue must be an integer.");
+		}
+        if (minValue !== null && maxValue !== null && minValue > maxValue) {
+            throw new RangeError("Option minValue must be less than or equal to maxValue.");
+        }
+    };
+	constructor({minValue = null, maxValue = null, ...otherProperties} = {}) {
+		super(otherProperties);
+		SlashCommandIntegerOption.#validateBounds(minValue, maxValue);
+		this.#minValue = minValue;
+		this.#maxValue = maxValue;
+	};
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addIntegerOption(optionBuilder => {
+		this._configureOptionBuilderCommonProperties(optionBuilder);
+		if (this.#minValue !== null) {
+            optionBuilder.setMinValue(this.#minValue);
+        }
+        if (this.#maxValue !== null) {
+            optionBuilder.setMaxValue(this.#maxValue);
+        }
+        return optionBuilder;
+	});
+};
+
+export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption, SlashCommandIntegerOption};
