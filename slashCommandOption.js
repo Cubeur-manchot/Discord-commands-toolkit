@@ -49,6 +49,14 @@ const SlashCommandOption = class {
 		SlashCommandOption.#validateRequired(required);
 		this.#required = required;
 	};
+	addToSlashCommandBuilder = slashCommandBuilder => {
+		throw new Error("addToSlashCommandBuilder must be implemented in subclasses.");
+	};
+	_configureOptionBuilderCommonProperties = optionBuilder =>
+		optionBuilder
+			.setName(this.#name)
+			.setDescription(this.#description)
+			.setRequired(this.#required);
 };
 
 const SlashCommandStringOption = class extends SlashCommandOption {
@@ -83,6 +91,11 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 		SlashCommandStringOption.#validateChoices(choices);
 		this.#choices = choices;
 	};
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addStringOption(optionBuilder => {
+		this._configureOptionBuilderCommonProperties(optionBuilder);
+		optionBuilder.addChoices(...this.#choices);
+		return optionBuilder;
+	});
 };
 
 const SlashCommandUserOption = class extends SlashCommandOption {
@@ -95,6 +108,9 @@ const SlashCommandUserOption = class extends SlashCommandOption {
 		super(otherProperties);
 		SlashCommandUserOption.#validateNoChoices(choices);
 	};
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addUserOption(optionBuilder =>
+		this._configureOptionBuilderCommonProperties(optionBuilder)
+	);
 };
 
 export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption};

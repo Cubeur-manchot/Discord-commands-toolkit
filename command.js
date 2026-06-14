@@ -1,5 +1,6 @@
 "use strict";
 
+import Discord from "discord.js";
 import CommandContexts from "./commandContexts.js";
 import SlashCommandOption from "./slashCommandOption.js";
 
@@ -102,4 +103,31 @@ export default class Command {
 		Command.#validateMemberPermissions(memberPermissions);
 		this.#memberPermissions = memberPermissions;
 	};
+	buildSlashCommand = () => {
+		if (!this.#isSlashCommand) {
+			return null;
+		}
+		let slashCommandBuilder = this.#buildApplicationCommand(Discord.SlashCommandBuilder)
+			.setDescription(this.#description);
+		this.#options.forEach(option => addToSlashCommandBuilder(slashCommandBuilder));
+		return slashCommandBuilder;
+	};
+	buildUserContextMenuCommand = () => {
+		if (!this.#isUserContextMenuCommand) {
+			return null;
+		}
+		return this.#buildContextMenuCommand(Discord.ApplicationCommandType.User);
+	};
+	buildMessageContextMenuCommand = () => {
+		if (!this.#isMessageContextMenuCommand) {
+			return null;
+		}
+		return this.#buildContextMenuCommand(Discord.ApplicationCommandType.Message);
+	};
+	#buildContextMenuCommand = type => (this.#buildApplicationCommand(Discord.ContextMenuCommandBuilder))
+		.setType(type);
+	#buildApplicationCommand = applicationCommandBuilder => new applicationCommandBuilder()
+		.setName(this.#name)
+		.setContexts(Discord.InteractionContextType.Guild, ...(this.#allowDirectMessages ? [Discord.InteractionContextType.BotDM] : []))
+		.setDefaultMemberPermissions(this.#memberPermissions);
 };
