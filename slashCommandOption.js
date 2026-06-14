@@ -91,11 +91,10 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 		SlashCommandStringOption.#validateChoices(choices);
 		this.#choices = choices;
 	};
-	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addStringOption(optionBuilder => {
-		this._configureOptionBuilderCommonProperties(optionBuilder);
-		optionBuilder.addChoices(...this.#choices);
-		return optionBuilder;
-	});
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addStringOption(optionBuilder =>
+		this._configureOptionBuilderCommonProperties(optionBuilder)
+		.setChoices(...this.#choices)
+	);
 };
 
 const SlashCommandUserOption = class extends SlashCommandOption {
