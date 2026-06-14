@@ -54,9 +54,6 @@ const SlashCommandOption = class {
 const SlashCommandStringOption = class extends SlashCommandOption {
 	#choices;
 	static #validateChoices = choices => {
-		if (choices === undefined || choices === null) {
-			return;
-		}
 		if (!Array.isArray(choices)) {
 			throw new TypeError("Option choices must be an array.");
 		}
@@ -81,7 +78,7 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 			}
 		}
 	};
-	constructor({choices, ...otherProperties} = {}) {
+	constructor({choices = [], ...otherProperties} = {}) {
 		super(otherProperties);
 		SlashCommandStringOption.#validateChoices(choices);
 		this.#choices = choices;
