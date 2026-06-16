@@ -68,7 +68,7 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 		if (choices.length > 25) {
 			throw new RangeError("Option choices must be less than or equal to 25.");
 		}
-		for (let choice of choices) {
+		for (const choice of choices) {
 			if (choice === null || typeof choice !== "object" || !choice.hasOwnProperty("name") || !choice.hasOwnProperty("value")) {
 				throw new TypeError("Option choices must be an array of objects with 'name' and 'value' properties.");
 			}
@@ -100,7 +100,7 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 const SlashCommandUserOption = class extends SlashCommandOption {
 	static #validateNoChoices = choices => {
 		if (choices !== undefined && choices !== null) {
-            throw new TypeError("Option choices are not allowed for user options.");
+			throw new TypeError("Option choices are not allowed for user options.");
 		}
 	};
 	constructor({choices, ...otherProperties} = {}) {
@@ -115,17 +115,17 @@ const SlashCommandUserOption = class extends SlashCommandOption {
 const SlashCommandIntegerOption = class extends SlashCommandOption {
 	#minValue;
 	#maxValue;
-    static #validateBounds = (minValue, maxValue) => {
+	static #validateBounds = (minValue, maxValue) => {
 		if (minValue !== null && !Number.isSafeInteger(minValue)) {
 			throw new TypeError("Option minValue must be an integer.");
 		}
 		if (maxValue !== null && !Number.isSafeInteger(maxValue)) {
 			throw new TypeError("Option maxValue must be an integer.");
 		}
-        if (minValue !== null && maxValue !== null && minValue > maxValue) {
-            throw new RangeError("Option minValue must be less than or equal to maxValue.");
-        }
-    };
+		if (minValue !== null && maxValue !== null && minValue > maxValue) {
+			throw new RangeError("Option minValue must be less than or equal to maxValue.");
+		}
+	};
 	constructor({minValue = null, maxValue = null, ...otherProperties} = {}) {
 		super(otherProperties);
 		SlashCommandIntegerOption.#validateBounds(minValue, maxValue);
@@ -135,12 +135,12 @@ const SlashCommandIntegerOption = class extends SlashCommandOption {
 	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addIntegerOption(optionBuilder => {
 		this._configureOptionBuilderCommonProperties(optionBuilder);
 		if (this.#minValue !== null) {
-            optionBuilder.setMinValue(this.#minValue);
-        }
-        if (this.#maxValue !== null) {
-            optionBuilder.setMaxValue(this.#maxValue);
-        }
-        return optionBuilder;
+			optionBuilder.setMinValue(this.#minValue);
+		}
+		if (this.#maxValue !== null) {
+			optionBuilder.setMaxValue(this.#maxValue);
+		}
+		return optionBuilder;
 	});
 };
 

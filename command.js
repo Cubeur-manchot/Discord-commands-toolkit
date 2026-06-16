@@ -33,11 +33,11 @@ export default class Command {
 	};
 	static #validateDescription = (description, contexts) => {
 		if (!contexts.isSlashCommand()) {
-            if (description !== undefined && description !== null) {
-                throw new RangeError("Command is not a slash command and must not have a description.");
-            }
-            return;
-        }
+			if (description !== undefined && description !== null) {
+				throw new RangeError("Command is not a slash command and must not have a description.");
+			}
+			return;
+		}
 		if ((description === undefined || description === null) && contexts.isSlashCommand()) {
 			throw new TypeError("Command description for slash command is required.");
 		}
@@ -130,4 +130,9 @@ export default class Command {
 		.setName(this.#name)
 		.setContexts(Discord.InteractionContextType.Guild, ...(this.#allowDirectMessages ? [Discord.InteractionContextType.BotDM] : []))
 		.setDefaultMemberPermissions(this.#memberPermissions);
+	buildAllApplicationCommands = () => [
+		this.buildSlashCommand(),
+		this.buildUserContextMenuCommand(),
+		this.buildMessageContextMenuCommand()
+	].filter(builder => builder !== null);
 };
