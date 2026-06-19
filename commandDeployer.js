@@ -62,13 +62,13 @@ export default class CommandDeployer {
 		CommandDeployer.#validateGuildIds(guildIds);
 		this.#guildIds = guildIds;
 	};
-	setGlobalCommands = async () => {
+	deployGlobalCommands = async () => {
 		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
 		this.#logger.info("Start updating global application commands.");
 		await this.#discordClient.application.commands.set(this.#applicationCommands);
 		this.#logger.info("Global application commands have been deployed successfully.");
 	};
-	setGuildCommands = async () => {
+	deployGuildCommands = async () => {
 		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
 		const missingGuilds = this.#guildIds.filter(guildId => !this.#discordClient.guilds.cache.has(guildId));
 		if (missingGuilds.length > 0) {
