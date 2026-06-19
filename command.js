@@ -90,12 +90,12 @@ export default class Command {
 	} = {}) {
 		Command.#validateName(name);
 		this.#name = name;
-		Command.#validateDescription(description, contexts);
-		this.#description = description;
 		Command.#validateContext(contexts);
 		this.#isSlashCommand = contexts.isSlashCommand();
 		this.#isUserContextMenuCommand = contexts.isUserContextMenuCommand();
 		this.#isMessageContextMenuCommand = contexts.isMessageContextMenuCommand();
+		Command.#validateDescription(description, contexts);
+		this.#description = description;
 		Command.#validateOptions(options, contexts);
 		this.#options = options;
 		Command.#validateAllowDirectMessages(allowDirectMessages);
