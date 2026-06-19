@@ -109,7 +109,7 @@ export default class Command {
 		}
 		let slashCommandBuilder = this.#buildApplicationCommand(Discord.SlashCommandBuilder)
 			.setDescription(this.#description);
-		this.#options.forEach(option => addToSlashCommandBuilder(slashCommandBuilder));
+		this.#options.forEach(option => option.addToSlashCommandBuilder(slashCommandBuilder));
 		return slashCommandBuilder;
 	};
 	buildUserContextMenuCommand = () => {
