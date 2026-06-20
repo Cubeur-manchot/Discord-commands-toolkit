@@ -70,6 +70,9 @@ export default class CommandDeployer {
 	};
 	deployGuildCommands = async () => {
 		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
+		if (!this.#guildIds) {
+			throw new Error("Could not deploy guild application commands because guilds is null or undefined.");
+		}
 		const missingGuilds = this.#guildIds.filter(guildId => !this.#discordClient.guilds.cache.has(guildId));
 		if (missingGuilds.length > 0) {
 			throw new Error(`Could not deploy guild application commands because some guilds cannot be found : ${missingGuilds.join(", ")}. The deployment of commands has been aborted.`);
