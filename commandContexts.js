@@ -24,7 +24,9 @@ export default class CommandContexts {
 		}
 	};
 	constructor({isSlashCommand = true, isUserContextMenuCommand = false, isMessageContextMenuCommand = false} = {}) {
-		[isSlashCommand, isUserContextMenuCommand, isMessageContextMenuCommand].forEach(CommandContexts.#validateContext);
+		CommandContexts.#validateContext(isSlashCommand);
+		CommandContexts.#validateContext(isUserContextMenuCommand);
+		CommandContexts.#validateContext(isMessageContextMenuCommand);
 		CommandContexts.#validateContexts(isSlashCommand, isUserContextMenuCommand, isMessageContextMenuCommand);
 		this.#isSlashCommand = isSlashCommand;
 		this.#isUserContextMenuCommand = isUserContextMenuCommand;
