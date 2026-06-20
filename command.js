@@ -32,13 +32,13 @@ export default class Command {
 		}
 	};
 	static #validateDescription = (description, contexts) => {
-		if (!contexts.isSlashCommand()) {
+		if (!contexts.isSlashCommand) {
 			if (description !== undefined && description !== null) {
 				throw new RangeError("Command is not a slash command and must not have a description.");
 			}
 			return;
 		}
-		if ((description === undefined || description === null) && contexts.isSlashCommand()) {
+		if ((description === undefined || description === null) && contexts.isSlashCommand) {
 			throw new TypeError("Command description for slash command is required.");
 		}
 		if (typeof description !== "string") {
@@ -57,7 +57,7 @@ export default class Command {
 		if (!Array.isArray(options)) {
 			throw new TypeError("Command options must be an array.");
 		}
-		if (options.length > 0 && !contexts.isSlashCommand()) {
+		if (options.length > 0 && !contexts.isSlashCommand) {
 			throw new TypeError("Command options are not allowed because the command is not a slash command.");
 		}
 		if (options.length > 25) {
@@ -91,9 +91,9 @@ export default class Command {
 		Command.#validateName(name);
 		this.#name = name;
 		Command.#validateContext(contexts);
-		this.#isSlashCommand = contexts.isSlashCommand();
-		this.#isUserContextMenuCommand = contexts.isUserContextMenuCommand();
-		this.#isMessageContextMenuCommand = contexts.isMessageContextMenuCommand();
+		this.#isSlashCommand = contexts.isSlashCommand;
+		this.#isUserContextMenuCommand = contexts.isUserContextMenuCommand;
+		this.#isMessageContextMenuCommand = contexts.isMessageContextMenuCommand;
 		Command.#validateDescription(description, contexts);
 		this.#description = description;
 		Command.#validateOptions(options, contexts);

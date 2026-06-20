@@ -4,6 +4,15 @@ export default class CommandContexts {
 	#isSlashCommand;
 	#isUserContextMenuCommand;
 	#isMessageContextMenuCommand;
+	get isSlashCommand() {
+		return this.#isSlashCommand;
+	}
+	get isUserContextMenuCommand() {
+		return this.#isUserContextMenuCommand;
+	}
+	get isMessageContextMenuCommand() {
+		return this.#isMessageContextMenuCommand;
+	}
 	static #validateContext = context => {
 		if (typeof context !== "boolean") {
 			throw new TypeError("Context must be a boolean.");
@@ -21,7 +30,4 @@ export default class CommandContexts {
 		this.#isUserContextMenuCommand = isUserContextMenuCommand;
 		this.#isMessageContextMenuCommand = isMessageContextMenuCommand;
 	};
-	isSlashCommand = () => this.#isSlashCommand;
-	isUserContextMenuCommand = () => this.#isUserContextMenuCommand;
-	isMessageContextMenuCommand = () => this.#isMessageContextMenuCommand;
 };
