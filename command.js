@@ -103,7 +103,7 @@ export default class Command {
 		Command.#validateMemberPermissions(memberPermissions);
 		this.#memberPermissions = memberPermissions;
 	};
-	buildSlashCommand = () => {
+	#buildSlashCommand = () => {
 		if (!this.#isSlashCommand) {
 			return null;
 		}
@@ -112,13 +112,13 @@ export default class Command {
 		this.#options.forEach(option => option.addToSlashCommandBuilder(slashCommandBuilder));
 		return slashCommandBuilder;
 	};
-	buildUserContextMenuCommand = () => {
+	#buildUserContextMenuCommand = () => {
 		if (!this.#isUserContextMenuCommand) {
 			return null;
 		}
 		return this.#buildContextMenuCommand(Discord.ApplicationCommandType.User);
 	};
-	buildMessageContextMenuCommand = () => {
+	#buildMessageContextMenuCommand = () => {
 		if (!this.#isMessageContextMenuCommand) {
 			return null;
 		}
@@ -130,7 +130,7 @@ export default class Command {
 		.setName(this.#name)
 		.setContexts(Discord.InteractionContextType.Guild, ...(this.#allowDirectMessages ? [Discord.InteractionContextType.BotDM] : []))
 		.setDefaultMemberPermissions(this.#memberPermissions);
-	buildAllApplicationCommands = () => [
+	build = () => [
 		this.buildSlashCommand(),
 		this.buildUserContextMenuCommand(),
 		this.buildMessageContextMenuCommand()

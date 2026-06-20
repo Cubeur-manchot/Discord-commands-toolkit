@@ -56,7 +56,7 @@ export default class CommandDeployer {
 		this.#discordClient = discordClient;
 		CommandDeployer.#validateCommands(commands);
 		this.#commands = commands;
-		this.#applicationCommands = this.#commands.flatMap(command => command.buildAllApplicationCommands());
+		this.#applicationCommands = this.#commands.flatMap(command => command.build());
 		CommandDeployer.#validateLogger(logger);
 		this.#logger = logger;
 		CommandDeployer.#validateGuildIds(guildIds);
