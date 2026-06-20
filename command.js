@@ -127,8 +127,8 @@ export default class Command {
 		.setContexts(Discord.InteractionContextType.Guild, ...(this.#allowDirectMessages ? [Discord.InteractionContextType.BotDM] : []))
 		.setDefaultMemberPermissions(this.#memberPermissions);
 	build = () => [
-	].filter(builder => builder !== null);
 		this.#buildSlashCommand(),
 		this.#buildUserContextMenuCommand(),
 		this.#buildMessageContextMenuCommand()
+	].filter(Boolean);
 };
