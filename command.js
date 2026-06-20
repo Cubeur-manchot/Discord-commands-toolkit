@@ -7,9 +7,7 @@ import SlashCommandOption from "./slashCommandOption.js";
 export default class Command {
 	#name;
 	#description;
-	#isSlashCommand;
-	#isUserContextMenuCommand;
-	#isMessageContextMenuCommand;
+	#contexts;
 	#options;
 	#allowDirectMessages;
 	#memberPermissions;
@@ -91,9 +89,7 @@ export default class Command {
 		Command.#validateName(name);
 		this.#name = name;
 		Command.#validateContext(contexts);
-		this.#isSlashCommand = contexts.isSlashCommand;
-		this.#isUserContextMenuCommand = contexts.isUserContextMenuCommand;
-		this.#isMessageContextMenuCommand = contexts.isMessageContextMenuCommand;
+		this.#contexts = contexts;
 		Command.#validateDescription(description, contexts);
 		this.#description = description;
 		Command.#validateOptions(options, contexts);
@@ -104,7 +100,7 @@ export default class Command {
 		this.#memberPermissions = memberPermissions;
 	};
 	#buildSlashCommand = () => {
-		if (!this.#isSlashCommand) {
+		if (!this.#contexts.isSlashCommand) {
 			return null;
 		}
 		let slashCommandBuilder = this.#buildApplicationCommand(Discord.SlashCommandBuilder)
@@ -113,13 +109,13 @@ export default class Command {
 		return slashCommandBuilder;
 	};
 	#buildUserContextMenuCommand = () => {
-		if (!this.#isUserContextMenuCommand) {
+		if (!this.#contexts.isUserContextMenuCommand) {
 			return null;
 		}
 		return this.#buildContextMenuCommand(Discord.ApplicationCommandType.User);
 	};
 	#buildMessageContextMenuCommand = () => {
-		if (!this.#isMessageContextMenuCommand) {
+		if (!this.#contexts.isMessageContextMenuCommand) {
 			return null;
 		}
 		return this.#buildContextMenuCommand(Discord.ApplicationCommandType.Message);
