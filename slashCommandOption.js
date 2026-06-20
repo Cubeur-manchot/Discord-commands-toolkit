@@ -69,7 +69,7 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 			throw new RangeError("Option choices must be less than or equal to 25.");
 		}
 		for (const choice of choices) {
-			if (choice === null || typeof choice !== "object" || !choice.hasOwnProperty("name") || !choice.hasOwnProperty("value")) {
+			if (choice === null || typeof choice !== "object" || !Object.hasOwnProperty.call(choice, "name") || !Object.hasOwnProperty.call(choice, "value")) {
 				throw new TypeError("Option choices must be an array of objects with 'name' and 'value' properties.");
 			}
 			if (typeof choice.name !== "string") {
