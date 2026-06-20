@@ -38,7 +38,7 @@ const SlashCommandOption = class {
 			throw new TypeError("Option required must be a boolean.");
 		}
 	};
-	constructor({name, description, required = false, choices} = {}) {
+	constructor({name, description, required = false} = {}) {
 		if (new.target === SlashCommandOption) {
 			throw new TypeError("SlashCommandOption is an abstract class and cannot be instantiated directly.");
 		}
