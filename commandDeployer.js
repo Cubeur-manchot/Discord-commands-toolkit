@@ -62,26 +62,23 @@ export default class CommandDeployer {
 		CommandDeployer.#validateGuildIds(guildIds);
 		this.#guildIds = guildIds;
 	};
-	deployGlobalCommands = async () => {
+	deployCommands = async () => {
 		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
-		this.#logger.info("Start updating global application commands.");
-		await this.#discordClient.application.commands.set(this.#applicationCommands);
-		this.#logger.info("Global application commands have been deployed successfully.");
-	};
-	deployGuildCommands = async () => {
-		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
-		if (!this.#guildIds) {
-			throw new Error("Could not deploy guild application commands because guilds is null or undefined.");
+		if (this.#guildIds) {
+			const missingGuilds = this.#guildIds.filter(guildId => !this.#discordClient.guilds.cache.has(guildId));
+			if (missingGuilds.length > 0) {
+				throw new Error(`Could not deploy guild application commands because some guilds cannot be found : ${missingGuilds.join(", ")}. The deployment of commands has been aborted.`);
+			}
+			this.#logger.info("Start updating guild application commands.");
+			await Promise.all(this.#guildIds.map(async guildId => {
+				await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommands);
+				this.#logger.info(`Application commands have been deployed for guild "${guildId}".`);
+			}));
+			this.#logger.info(`Guild application commands have been deployed successfully to ${this.#guildIds.length} guild${this.#guildIds.lenght > 1 ? "s" : ""}.`);
+		} else {
+			this.#logger.info("Start updating global application commands.");
+			await this.#discordClient.application.commands.set(this.#applicationCommands);
+			this.#logger.info("Application commands have been deployed successfully at global scope.");
 		}
-		const missingGuilds = this.#guildIds.filter(guildId => !this.#discordClient.guilds.cache.has(guildId));
-		if (missingGuilds.length > 0) {
-			throw new Error(`Could not deploy guild application commands because some guilds cannot be found : ${missingGuilds.join(", ")}. The deployment of commands has been aborted.`);
-		}
-		this.#logger.info("Start updating guild application commands.");
-		await Promise.all(this.#guildIds.map(async guildId => {
-			await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommands);
-			this.#logger.info(`Application commands have been deployed for guild "${guildId}".`);
-		}));
-		this.#logger.info(`Guild application commands have been deployed successfully for the ${this.#guildIds.length} guild(s).`);
 	};
 };
