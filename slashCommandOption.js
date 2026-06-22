@@ -59,6 +59,18 @@ const SlashCommandOption = class {
 			.setRequired(this.#required);
 };
 
+const SlashCommandUserOption = class extends SlashCommandOption {
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addUserOption(optionBuilder =>
+		this._configureOptionBuilderCommonProperties(optionBuilder)
+	);
+};
+
+const SlashCommandBooleanOption = class extends SlashCommandOption {
+	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addBooleanOption(optionBuilder =>
+		this._configureOptionBuilderCommonProperties(optionBuilder)
+	);
+};
+
 const SlashCommandStringOption = class extends SlashCommandOption {
 	#choices;
 	static #validateChoices = choices => {
@@ -97,21 +109,6 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 	);
 };
 
-const SlashCommandUserOption = class extends SlashCommandOption {
-	static #validateNoChoices = choices => {
-		if (choices !== undefined && choices !== null) {
-			throw new TypeError("Option choices are not allowed for user options.");
-		}
-	};
-	constructor({choices, ...otherProperties} = {}) {
-		super(otherProperties);
-		SlashCommandUserOption.#validateNoChoices(choices);
-	};
-	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addUserOption(optionBuilder =>
-		this._configureOptionBuilderCommonProperties(optionBuilder)
-	);
-};
-
 const SlashCommandIntegerOption = class extends SlashCommandOption {
 	#minValue;
 	#maxValue;
@@ -142,12 +139,6 @@ const SlashCommandIntegerOption = class extends SlashCommandOption {
 		}
 		return optionBuilder;
 	});
-};
-
-const SlashCommandBooleanOption = class extends SlashCommandOption {
-	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addBooleanOption(optionBuilder =>
-		this._configureOptionBuilderCommonProperties(optionBuilder)
-	);
 };
 
 export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption, SlashCommandIntegerOption, SlashCommandBooleanOption};
