@@ -6,6 +6,9 @@ import SlashCommandOption from "./slashCommandOption.js";
 
 export default class Command {
 	#name;
+	get name() {
+		return this.#name;
+	};
 	#description;
 	#contexts;
 	#options;

@@ -21,6 +21,9 @@ export default class CommandsHandler {
 		if (commands.some(command => !(command instanceof Command))) {
 			throw new TypeError("Commands must be an array of Command instances.");
 		}
+		if (new Set(commands.map(command => command.name)).size !== commands.length) {
+			throw new RangeError("Command names must be unique. Define multiple contexts for the same command instead of duplicating the command.");
+		}
 	};
 	static #validateLogger = logger => {
 		if (typeof logger !== "object" || logger === null) {
