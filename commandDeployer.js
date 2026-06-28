@@ -61,6 +61,7 @@ export default class CommandDeployer {
 		this.#logger = logger;
 		CommandDeployer.#validateGuildIds(guildIds);
 		this.#guildIds = guildIds;
+		this.#discordClient.once(Discord.Events.ClientReady, () => this.deployCommands());
 	};
 	deployCommands = async () => {
 		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
