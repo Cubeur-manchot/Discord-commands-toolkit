@@ -61,9 +61,12 @@ export default class CommandDeployer {
 		this.#logger = logger;
 		CommandDeployer.#validateGuildIds(guildIds);
 		this.#guildIds = guildIds;
-		this.#discordClient.once(Discord.Events.ClientReady, () => this.deployCommands());
+		this.#attachEventHandlers();
 	};
-	deployCommands = async () => {
+	#attachEventHandlers = () => {
+		this.#discordClient.once(Discord.Events.ClientReady, () => this.#deployCommands());
+	};
+	#deployCommands = async () => {
 		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
 		if (this.#guildIds) {
 			const missingGuilds = this.#guildIds.filter(guildId => !this.#discordClient.guilds.cache.has(guildId));

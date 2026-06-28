@@ -43,8 +43,6 @@ const commandDeployer = new CommandDeployer({
 	guildIds: ["123456789012345678"]
 });
 
-// deploy the commands
-await commandDeployer.deployCommands();
 ```
 
 # Constructors parameters
