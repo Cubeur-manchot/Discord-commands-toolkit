@@ -78,13 +78,22 @@ export default class Command {
 			throw new TypeError("Command memberPermissions must be a bigint (Discord.PermissionFlagsBits).");
 		}
 	};
+	static #validateHandleInteraction = handleInteraction => {
+		if (handleInteraction === undefined || handleInteraction === null) {
+			throw new TypeError("Command handleInteraction is required.");
+		}
+		if (typeof handleInteraction !== "function") {
+			throw new TypeError("Command handleInteraction must be a function.");
+		}
+	};
 	constructor({
 		name,
 		description,
 		contexts = new CommandContexts(),
 		options = [],
 		allowDirectMessages = false,
-		memberPermissions = null
+		memberPermissions = null,
+		handleInteraction
 	} = {}) {
 		Command.#validateName(name);
 		this.#name = name;
@@ -98,6 +107,8 @@ export default class Command {
 		this.#allowDirectMessages = allowDirectMessages;
 		Command.#validateMemberPermissions(memberPermissions);
 		this.#memberPermissions = memberPermissions;
+		Command.#ValidateHandleInteraction(handleInteraction);
+		this.handleInteraction = handleInteraction;
 	};
 	#buildSlashCommand = () => {
 		if (!this.#contexts.isSlashCommand) {
