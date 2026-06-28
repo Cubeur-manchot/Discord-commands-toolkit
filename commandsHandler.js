@@ -3,7 +3,7 @@
 import Discord from "discord.js";
 import Command from "./command.js";
 
-export default class CommandDeployer {
+export default class CommandsHandler {
 	#discordClient;
 	#commands;
 	#applicationCommands;
@@ -52,22 +52,22 @@ export default class CommandDeployer {
 		}
 	};
 	constructor({discordClient, commands, logger, guildIds = null} = {}) {
-		CommandDeployer.#validateDiscordClient(discordClient);
+		CommandsHandler.#validateDiscordClient(discordClient);
 		this.#discordClient = discordClient;
-		CommandDeployer.#validateCommands(commands);
+		CommandsHandler.#validateCommands(commands);
 		this.#commands = commands;
 		this.#applicationCommands = this.#commands.flatMap(command => command.build());
-		CommandDeployer.#validateLogger(logger);
+		CommandsHandler.#validateLogger(logger);
 		this.#logger = logger;
-		CommandDeployer.#validateGuildIds(guildIds);
+		CommandsHandler.#validateGuildIds(guildIds);
 		this.#guildIds = guildIds;
 		this.#attachEventHandlers();
 	};
 	#attachEventHandlers = () => {
-		this.#discordClient.once(Discord.Events.ClientReady, () => this.#deployCommands());
+		this.#discordClient.once(Discord.Events.ClientReady, this.#deployCommands);
 	};
 	#deployCommands = async () => {
-		CommandDeployer.#validateDiscordClientApplicationId(this.#discordClient);
+		CommandsHandler.#validateDiscordClientApplicationId(this.#discordClient);
 		if (this.#guildIds) {
 			const missingGuilds = this.#guildIds.filter(guildId => !this.#discordClient.guilds.cache.has(guildId));
 			if (missingGuilds.length > 0) {
