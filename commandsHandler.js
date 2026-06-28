@@ -58,8 +58,8 @@ export default class CommandsHandler {
 		CommandsHandler.#validateDiscordClient(discordClient);
 		this.#discordClient = discordClient;
 		CommandsHandler.#validateCommands(commands);
-		this.#commands = commands;
-		this.#applicationCommands = this.#commands.flatMap(command => command.build());
+		this.#commands = new Map(commands.map(command => [command.name, command]));
+		this.#applicationCommands = commands.flatMap(command => command.build());
 		CommandsHandler.#validateLogger(logger);
 		this.#logger = logger;
 		CommandsHandler.#validateGuildIds(guildIds);
