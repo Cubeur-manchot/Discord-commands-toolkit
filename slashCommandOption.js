@@ -2,6 +2,9 @@
 
 const SlashCommandOption = class {
 	#name;
+	get name() {
+		return this.#name;
+	};
 	#description;
 	#required;
 	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;

@@ -67,6 +67,9 @@ export default class Command {
 		if (options.some(option => !(option instanceof SlashCommandOption))) {
 			throw new TypeError("Command options must be instances of SlashCommandOption.");
 		}
+		if (new Set(options.map(option => option.name)).size !== options.length) {
+			throw new RangeError("Command option names must be unique.");
+		}
 	};
 	static #validateAllowDirectMessages = allowDirectMessages => {
 		if (typeof allowDirectMessages !== "boolean") {
