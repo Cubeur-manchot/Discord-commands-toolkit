@@ -4,21 +4,21 @@ Utility library to define and deploy Discord application commands with Discord.j
 
 # Overview
 
-1. Create one or more `Command` instances.
-1. Optionally add typed `SlashCommandOption` for slash commands.
-1. Deploy commands using a `CommandDeployer`, either globally or for specific guilds.
+1. Create one or more `Command` instances. Optionally add typed `SlashCommandOption` for slash commands.
+1. Create a `CommandsHandler` to deploy commands and handle interactions, either globally or for specific guilds.
 
 ## Example
 
 ```js
 import { PermissionsBitField } from "discord.js";
-import { Command, CommandContexts, SlashCommandStringOption, SlashCommandUserOption, CommandDeployer } from "discord-commands-toolkit";
+import { Command, CommandContexts, SlashCommandStringOption, SlashCommandUserOption, CommandsHandler } from "discord-commands-toolkit";
 
 // create the commands
 const helpCommand = new Command({
-	name: "help",
-	description: "Displays the help message for this bot",
-	allowDirectMessages: true
+	name: "helloworld",
+	description: "Reply with Hello World",
+	allowDirectMessages: true,
+	handleInteraction: interaction => ({content: "Hello World !"})
 });
 const banCommand = new Command({
 	name: "ban",
@@ -32,11 +32,15 @@ const banCommand = new Command({
 			choices: [{name: "1 hour", value: "1"}, {name: "1 day", value: "24"}, {name: "1 week", value: "168"}, {name: "Definitive ban", value: "infinite"}]
 		})
 	],
-	memberPermissions: Discord.PermissionsBitField.Flags.BanMembers
+	memberPermissions: Discord.PermissionsBitField.Flags.BanMembers,
+	handleInteraction: (interaction, options) => {
+		options.member.ban();
+		return {content: `Banning member with id ${options.member.id}...`};
+	};
 });
 
-// instanciate the command deployer
-const commandDeployer = new CommandDeployer({
+// instanciate the commands handler
+const commandsHandler = new CommandsHandler({
 	discordClient: client,
 	commands: [helpCommand, banCommand],
 	logger: logger,
@@ -51,15 +55,15 @@ Parameters marked with `*` are required. Others are optional.
 
 ## Command
 
-| Parameter             | Description                                                                                                                       | Default                 | Example                                                                                                                                                 |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`*               | Name of the command.                                                                                                              | -                       | "ban"                                                                                                                                                   |
-| `contexts`            | Contexts supported by the command. Must be an instance of `CommandContexts`.                                                      | Slash command only      | `new CommandContexts({isSlashCommand: true, isUserContextMenuCommand: true, isMessageContextMenuCommand: true})`                                        |
-| `description`*        | Description of the command. Relevant only for slash commands.                                                                     | -                       | "Ban a member"                                                                                                                                          |
-| `options`             | Options of the command. Relevant only for slash commands. Must be an array of instances of child classes of `SlashCommandOption`. | `[]`                    | `[new SlashCommandUserOption({name: "member", description: "Member to ban", required: true})]`                                                          |
-| `allowDirectMessages` | Allow usage in direct message with the bot.                                                                                       | `false`                 | `false`                                                                                                                                                 |
-| `memberPermissions`   | Restrict command usage to members having specific permissions.                                                                    | `null` (no restriction) | `Discord.PermissionsBitField.Flags.BanMembers`                                                                                                          |
-| `handleInteraction`*  | The behavior of the command. The function receives an object `{interaction, slashCommandOptions, targetMessage, targetUser}`.     | -                       | `({interaction, slashCommandOptions}) => {interaction.reply("Banning <@" + slashCommandOptions.member.id + ">..."); slashCommandOptions.member.ban();}` |
+| Parameter             | Description                                                                                                                       | Default                 | Example                                                                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`*               | Name of the command.                                                                                                              | -                       | "ban"                                                                                                                                                             |
+| `contexts`            | Contexts supported by the command. Must be an instance of `CommandContexts`.                                                      | Slash command only      | `new CommandContexts({isSlashCommand: true, isUserContextMenuCommand: true, isMessageContextMenuCommand: true})`                                                  |
+| `description`*        | Description of the command. Relevant only for slash commands.                                                                     | -                       | "Ban a member"                                                                                                                                                    |
+| `options`             | Options of the command. Relevant only for slash commands. Must be an array of instances of child classes of `SlashCommandOption`. | `[]`                    | `[new SlashCommandUserOption({name: "member", description: "Member to ban", required: true})]`                                                                    |
+| `allowDirectMessages` | Allow usage in direct message with the bot.                                                                                       | `false`                 | `false`                                                                                                                                                           |
+| `memberPermissions`   | Restrict command usage to members having specific permissions.                                                                    | `null` (no restriction) | `Discord.PermissionsBitField.Flags.BanMembers`                                                                                                                    |
+| `handleInteraction`*  | The behavior of the command. The function receives `interaction, slashCommandOptions`.                                            | -                       | `(interaction, slashCommandOptions) => {slashCommandOptions.member.ban(); return {content: "Banning member with id " + slashCommandOptions.member.id + "..."}; }` |
 
 ## CommandContexts
 
@@ -85,7 +89,7 @@ A command can be supported in multiple contexts. For example, a ban command can 
 | `maxValue`     | Maximum value for the option. Relevant only for integer option.                                                         | `null` (no constraint)       | `11`                                                                  |
 
 
-## CommandDeployer
+## CommandsHandler
 
 | Parameter        | Description                                                                    | Default                    | Example                                                                                                           |
 | ---------------- | ------------------------------------------------------------------------------ | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |

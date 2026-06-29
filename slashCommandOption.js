@@ -66,12 +66,14 @@ const SlashCommandUserOption = class extends SlashCommandOption {
 	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addUserOption(optionBuilder =>
 		this._configureOptionBuilderCommonProperties(optionBuilder)
 	);
+	getValue = interactionOptions => interactionOptions.getUser(this.name);
 };
 
 const SlashCommandBooleanOption = class extends SlashCommandOption {
 	addToSlashCommandBuilder = slashCommandBuilder => slashCommandBuilder.addBooleanOption(optionBuilder =>
 		this._configureOptionBuilderCommonProperties(optionBuilder)
 	);
+	getValue = interactionOptions => interactionOptions.getBoolean(this.name);
 };
 
 const SlashCommandStringOption = class extends SlashCommandOption {
@@ -110,6 +112,7 @@ const SlashCommandStringOption = class extends SlashCommandOption {
 		this._configureOptionBuilderCommonProperties(optionBuilder)
 		.setChoices(...this.#choices)
 	);
+	getValue = interactionOptions => interactionOptions.getString(this.name);
 };
 
 const SlashCommandIntegerOption = class extends SlashCommandOption {
@@ -142,6 +145,7 @@ const SlashCommandIntegerOption = class extends SlashCommandOption {
 		}
 		return optionBuilder;
 	});
+	getValue = interactionOptions => interactionOptions.getInteger(this.name);
 };
 
 export {SlashCommandOption, SlashCommandStringOption, SlashCommandUserOption, SlashCommandIntegerOption, SlashCommandBooleanOption};

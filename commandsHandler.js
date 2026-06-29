@@ -97,7 +97,10 @@ export default class CommandsHandler {
 		if (!command) {
 			throw new Error(`Receiving a command interaction for unhandled command "${interaction.commandName}".`);
 		}
-		const answer = command.handleInteraction(interaction);
+		const answer = command.handleInteraction(
+			interaction,
+			interaction.isChatInputCommand() ? command.parseOptions(interaction.options) : null
+		);
 		try {
 			interaction.reply(answer);
 		} catch (interactionReplyError) {

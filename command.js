@@ -148,4 +148,7 @@ export default class Command {
 		this.#buildUserContextMenuCommand(),
 		this.#buildMessageContextMenuCommand()
 	].filter(Boolean);
+	parseOptions = interactionOptions => new Map(
+		this.#options.map(option => [option.name, option.getValue(interactionOptions)])
+	);
 };
