@@ -93,6 +93,9 @@ export default class CommandsHandler {
 		if (!interaction.isCommand()) {
 			return;
 		}
+		if (this.#guildIds && interaction.guildId && !this.#guildIds.includes(interaction.guildId)) { // interaction from different guild
+			return;
+		}
 		const command = this.#commands.get(interaction.commandName);
 		if (!command) {
 			throw new Error(`Receiving a command interaction for unhandled command "${interaction.commandName}".`);
