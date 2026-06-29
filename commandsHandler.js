@@ -68,6 +68,7 @@ export default class CommandsHandler {
 	};
 	#attachEventHandlers = () => {
 		this.#discordClient.once(Discord.Events.ClientReady, this.#deployCommands);
+		this.#discordClient.on(Discord.Events.InteractionCreate, this.#handleInteraction);
 	};
 	#deployCommands = async () => {
 		CommandsHandler.#validateDiscordClientApplicationId(this.#discordClient);
@@ -86,6 +87,21 @@ export default class CommandsHandler {
 			this.#logger.info("Start updating global application commands.");
 			await this.#discordClient.application.commands.set(this.#applicationCommands);
 			this.#logger.info("Application commands have been deployed successfully at global scope.");
+		}
+	};
+	#handleInteraction = interaction => {
+		if (!interaction.isCommand()) {
+			return;
+		}
+		const command = this.#commands.get(interaction.commandName);
+		if (!command) {
+			throw new Error(`Receiving a command interaction for unhandled command "${interaction.commandName}".`);
+		}
+		const answer = command.handleInteraction(interaction);
+		try {
+			interaction.reply(answer);
+		} catch (interactionReplyError) {
+			this.#logger.error(`Failed to reply interaction : ${interactionReplyError.stack}`);
 		}
 	};
 };
