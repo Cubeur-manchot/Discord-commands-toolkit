@@ -113,7 +113,7 @@ export default class Command {
 		this.#allowDirectMessages = allowDirectMessages;
 		Command.#validateMemberPermissions(memberPermissions);
 		this.#memberPermissions = memberPermissions;
-		Command.#ValidateHandleInteraction(handleInteraction);
+		Command.#validateHandleInteraction(handleInteraction);
 		this.handleInteraction = handleInteraction;
 	};
 	#buildSlashCommand = () => {
