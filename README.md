@@ -7,14 +7,24 @@ Utility library to define and deploy Discord application commands with Discord.j
 1. Create one or more `Command` instances. Optionally add typed `SlashCommandOption` for slash commands.
 1. Create a `CommandsHandler` to deploy commands and handle interactions, either globally or for specific guilds.
 
-## Example
+## Include as package dependency
+
+In the `package.json`, register the dependency from the Git repository :
+```json
+  "dependencies": {
+    "discord.js": "^14",
+	"discord-commands-toolkit": "git+https://github.com/Cubeur-manchot/Discord-commands-toolkit.git"
+  }
+```
+
+## Example of usage
 
 ```js
 import { PermissionsBitField } from "discord.js";
 import { Command, CommandContexts, SlashCommandStringOption, SlashCommandUserOption, CommandsHandler } from "discord-commands-toolkit";
 
 // create the commands
-const helpCommand = new Command({
+const helloWorldCommand = new Command({
 	name: "helloworld",
 	description: "Reply with Hello World",
 	allowDirectMessages: true,
@@ -42,21 +52,11 @@ const banCommand = new Command({
 // instanciate the commands handler
 const commandsHandler = new CommandsHandler({
 	discordClient: client,
-	commands: [helpCommand, banCommand],
+	commands: [helloWorldCommand, banCommand],
 	logger: logger,
 	guildIds: ["123456789012345678"]
 });
 
-```
-
-# Include as package dependency
-
-In the `package.json`, register the dependency from the Git repository :
-```json
-  "dependencies": {
-    "discord.js": "^14",
-	"discord-commands-toolkit": "git+https://github.com/Cubeur-manchot/Discord-commands-toolkit.git"
-  }
 ```
 
 # Constructors parameters
