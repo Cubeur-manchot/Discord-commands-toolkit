@@ -53,7 +53,6 @@ const commandsHandler = new CommandsHandler({
 
 In the `package.json`, register the dependency from the Git repository :
 ```json
-
   "dependencies": {
     "discord.js": "^14",
 	"discord-commands-toolkit": "git+https://github.com/Cubeur-manchot/Discord-commands-toolkit.git"
