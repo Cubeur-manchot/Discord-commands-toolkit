@@ -5,8 +5,13 @@ import Command from "./command.js";
 
 export default class CommandsHandler {
 	#discordClient;
-	#commands;
-	#applicationCommands;
+	#commands; // instances of Command
+	#applicationCommandBuilders; // instances of Discord.js SlashCommandBuilder or ContextMenuCommandBuilder (to be deployed)
+	#applicationCommands; // instances of Discord.js ApplicationCommand (deployed)
+	get applicationCommands() {
+		return this.#applicationCommands;
+	}
+	#guildApplicationCommands;
 	#logger;
 	#guildIds;
 	static #validateDiscordClient = discordClient => {
@@ -59,7 +64,7 @@ export default class CommandsHandler {
 		this.#discordClient = discordClient;
 		CommandsHandler.#validateCommands(commands);
 		this.#commands = new Map(commands.map(command => [command.name, command]));
-		this.#applicationCommands = commands.flatMap(command => command.build());
+		this.#applicationCommandBuilders = commands.flatMap(command => command.build());
 		CommandsHandler.#validateLogger(logger);
 		this.#logger = logger;
 		CommandsHandler.#validateGuildIds(guildIds);
@@ -79,13 +84,13 @@ export default class CommandsHandler {
 			}
 			this.#logger.info("Start updating guild application commands.");
 			await Promise.all(this.#guildIds.map(async guildId => {
-				await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommands);
+				await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommandBuilders);
 				this.#logger.info(`Application commands have been deployed for guild "${guildId}".`);
 			}));
 			this.#logger.info(`Guild application commands have been deployed successfully to ${this.#guildIds.length} guild${this.#guildIds.lenght > 1 ? "s" : ""}.`);
 		} else {
 			this.#logger.info("Start updating global application commands.");
-			await this.#discordClient.application.commands.set(this.#applicationCommands);
+			this.#applicationCommands = await this.#discordClient.application.commands.set(this.#applicationCommandBuilders);
 			this.#logger.info("Application commands have been deployed successfully at global scope.");
 		}
 	};
