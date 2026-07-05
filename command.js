@@ -2,7 +2,7 @@
 
 import Discord from "discord.js";
 import CommandContexts from "./commandContexts.js";
-import SlashCommandOption from "./slashCommandOption.js";
+import {SlashCommandOption} from "./slashCommandOption.js";
 
 export default class Command {
 	#name;
