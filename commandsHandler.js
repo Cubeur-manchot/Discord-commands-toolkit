@@ -94,7 +94,7 @@ export default class CommandsHandler {
 			this.#logger.info("Application commands have been deployed successfully at global scope.");
 		}
 	};
-	#handleInteraction = interaction => {
+	#handleInteraction = async interaction => {
 		if (!interaction.isCommand()) {
 			return;
 		}
@@ -105,12 +105,12 @@ export default class CommandsHandler {
 		if (!command) {
 			throw new Error(`Receiving a command interaction for unhandled command "${interaction.commandName}".`);
 		}
-		const answer = command.handleInteraction(
+		const answer = await command.handleInteraction(
 			interaction,
 			interaction.isChatInputCommand() ? command.parseOptions(interaction.options) : null
 		);
 		try {
-			interaction.reply(answer);
+			await interaction.reply(answer);
 		} catch (interactionReplyError) {
 			this.#logger.error(`Failed to reply interaction : ${interactionReplyError.stack}`);
 		}
