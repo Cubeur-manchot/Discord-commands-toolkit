@@ -12,6 +12,9 @@ export default class Command {
 	#description;
 	#contexts;
 	#options;
+	get options() {
+		return this.#options;
+	}
 	#allowDirectMessages;
 	#memberPermissions;
 	static #nameRegex = /^[-_a-z0-9\u00C0-\u017F]+$/i;
