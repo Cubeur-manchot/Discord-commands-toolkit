@@ -68,7 +68,7 @@ export default class CommandsHandler {
 		this.#logger = logger;
 		CommandsHandler.#validateGuildIds(guildIds);
 		this.#guildIds = guildIds;
-		this.#commands = new Map(commands.map(command => [command.name, Object.assign(command, {commandHandler: this, logger: this.#logger})]));
+		this.#commands = new Map(commands.map(command => [command.name, Object.assign(command, {commandsHandler: this, logger: this.#logger})]));
 		this.#attachEventHandlers();
 	};
 	#attachEventHandlers = () => {
