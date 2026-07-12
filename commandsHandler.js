@@ -12,6 +12,9 @@ export default class CommandsHandler {
 		return this.#applicationCommands;
 	}
 	#guildApplicationCommands;
+	get guildApplicationCommands() {
+		return this.#guildApplicationCommands;
+	}
 	#logger;
 	#guildIds;
 	static #validateDiscordClient = discordClient => {
