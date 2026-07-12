@@ -91,6 +91,8 @@ export default class CommandsHandler {
 				this.#guildApplicationCommands.set(guildId, await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommandBuilders));
 				this.#logger.info(`Application commands have been deployed for guild "${guildId}".`);
 			}));
+			this.#logger.debug("Guild application commands :");
+			this.#logger.debug(this.guildApplicationCommands);
 			this.#logger.info(`Guild application commands have been deployed successfully to ${this.#guildIds.length} guild${this.#guildIds.length > 1 ? "s" : ""}.`);
 		} else {
 			this.#logger.info("Start updating global application commands.");
