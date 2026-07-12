@@ -92,12 +92,6 @@ export default class CommandsHandler {
 				this.#logger.info(`Application commands have been deployed for guild "${guildId}".`);
 			}));
 			this.#guildApplicationCommands = guildApplicationCommands;
-			console.debug("Deployed guild application commands :");
-			console.debug(guildApplicationCommands);
-			console.debug("Guild application commands :");
-			console.debug(this.#guildApplicationCommands);
-			console.debug(this.guildApplicationCommands);
-			console.dir(this.guildApplicationCommands);
 			this.#logger.info(`Guild application commands have been deployed successfully to ${this.#guildIds.length} guild${this.#guildIds.length > 1 ? "s" : ""}.`);
 		} else {
 			this.#logger.info("Start updating global application commands.");
