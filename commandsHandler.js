@@ -85,13 +85,12 @@ export default class CommandsHandler {
 			if (missingGuilds.length > 0) {
 				throw new Error(`Could not deploy guild application commands because some guilds cannot be found : ${missingGuilds.join(", ")}. The deployment of commands has been aborted.`);
 			}
-			const guildApplicationCommands = new Map();
+			this.#guildApplicationCommands = new Map();
 			this.#logger.info("Start updating guild application commands.");
 			await Promise.all(this.#guildIds.map(async guildId => {
-				guildApplicationCommands.set(guildId, await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommandBuilders));
+				this.#guildApplicationCommands.set(guildId, await this.#discordClient.guilds.cache.get(guildId).commands.set(this.#applicationCommandBuilders));
 				this.#logger.info(`Application commands have been deployed for guild "${guildId}".`);
 			}));
-			this.#guildApplicationCommands = guildApplicationCommands;
 			this.#logger.info(`Guild application commands have been deployed successfully to ${this.#guildIds.length} guild${this.#guildIds.length > 1 ? "s" : ""}.`);
 		} else {
 			this.#logger.info("Start updating global application commands.");
